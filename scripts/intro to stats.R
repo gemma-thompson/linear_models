@@ -128,3 +128,12 @@ y <- dnorm(x)
 plot(x,y, type = "l", lwd = 2, axes = FALSE, xlab = "", ylab = "")
 axis(1, at = -3:3, labels = c("-3s", "-2s", "-1s", "mean", "1s", "2s", "3s"))
 
+# CONFIDENCE INTERVALS ________________________________ ----
+
+lowerCI <- 2.62-(2*1.22)
+
+upperCI <- 2.62+(2*1.22)
+
+lowerCI
+upperCI
+
