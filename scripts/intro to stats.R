@@ -275,3 +275,44 @@ for (i in 1:4){
 legend("topright", inset=.05, title="Distributions",
        labels, lwd=2, lty=c(1, 1, 1, 1, 2), col=colors)
 
+df <- c(1:30)
+
+# map_dbl forces returned values to be a single vector of numbers (rather than a list)
+critical_t <- map_dbl(df, ~qt(p=0.05/2, df=.x, lower.tail=FALSE))
+
+tibble(df,critical_t) %>% 
+  ggplot(aes(x=df, y=critical_t))+
+  geom_point()+
+  geom_line()+
+  geom_hline(aes(yintercept=1.96), linetype="dashed", colour="red")+
+  labs(x= "Degrees of Freedom",
+       y= expression(paste("Critical value of ", italic("t"))))
+
+lsmodel1 <- lm(height ~ type, data = darwin)
+
+# SUMMARY OF MODEL BASE R __________________________________________ ----
+
+summary(lsmodel1)
+
+# SUMMARY OF MODEL TIDYVERSE ____________________________________________ ----
+
+broom::tidy(lsmodel1)
+
+# OBSERVED PLANT HEIGHTS __________________________________________ ----
+
+tidy_model1 <- broom::tidy(lsmodel1)
+
+tidy_model1[[2,2]] / tidy_model1[[2,3]]
+
+# PAIRED T BASE R _____________________________________________________ ----
+
+lsmodel_darwin <- lm(height ~ type + factor(pair), data = darwin)
+summary(lsmodel_darwin)
+
+# PAIRED T TIDYVERSE _____________________________________________ ----
+
+darwin %>% 
+  mutate(pair = as_factor(pair)) %>% 
+  lm(height ~ type + pair, data = .) %>% 
+  broom::tidy()
+
